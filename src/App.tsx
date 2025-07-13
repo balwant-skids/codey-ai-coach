@@ -9,6 +9,7 @@ import { CourseOutlineModal } from './components/CourseOutlineModal';
 import { SettingsModal } from './components/SettingsModal';
 import { AdminDashboard } from './components/AdminDashboard';
 import { LoadingSpinner } from './components/LoadingSpinner';
+import { Dashboard } from './components/Dashboard';
 import { CODING_LEARNING_PATH, MEDTECH_LEARNING_PATH, SWE_LEARNING_PATH, BADGES_CONFIG } from './constants';
 import type { UserPersona, Theme, GameProgress, CourseMode, AuthUser } from './types';
 import { explainConcept, evaluateCode } from './services/geminiService';
@@ -23,7 +24,7 @@ interface AppNotification {
   iconName?: keyof typeof Icons;
 }
 
-type ViewMode = 'loading' | 'welcome' | 'app' | 'admin';
+type ViewMode = 'loading' | 'welcome' | 'dashboard' | 'learning' | 'admin';
 
 const App: React.FC = () => {
   const [viewMode, setViewMode] = useState<ViewMode>('loading');
@@ -56,7 +57,7 @@ const App: React.FC = () => {
         const userProgress = await dbService.getUserProgress(user.uid);
         if (userProgress) {
           setProgress(userProgress);
-          setViewMode('app');
+          setViewMode('dashboard');
         } else {
           setProgress(null);
           setViewMode('welcome');
@@ -115,7 +116,7 @@ const App: React.FC = () => {
   }, [progress, learningPath]);
 
   useEffect(() => {
-    if (viewMode === 'app' && progress) {
+    if (viewMode === 'learning' && progress) {
       handleLevelChange(progress.currentLevelIndex);
     }
   }, [progress?.currentLevelIndex, viewMode, handleLevelChange]);
@@ -144,7 +145,7 @@ const App: React.FC = () => {
         completedSteps: {},
     };
     setProgress(initialProgress);
-    setViewMode('app');
+    setViewMode('dashboard');
   };
   
   const handleCodeSubmit = async () => {
@@ -202,10 +203,19 @@ const App: React.FC = () => {
   const handleNavigateToLevel = (index: number) => {
     updateProgress({ currentLevelIndex: index });
     setShowCourseOutline(false);
+    setViewMode('learning');
   }
 
   const handleLogout = async () => {
     await authService.signOut();
+  };
+
+  const handleGoHome = () => {
+    setViewMode('dashboard');
+  };
+
+  const handleStartLearning = () => {
+    setViewMode('learning');
   };
   
   const renderContent = () => {
@@ -215,13 +225,61 @@ const App: React.FC = () => {
         case 'welcome':
             return <WelcomeModal onOnboardingComplete={handleOnboardingComplete} authUser={authUser} />;
         case 'admin':
-            return <AdminDashboard onExit={() => setViewMode('app')} />;
-        case 'app':
+            return <AdminDashboard onExit={() => setViewMode('dashboard')} />;
+        case 'dashboard':
+            if (!progress || !authUser) {
+                return <div className="flex items-center justify-center min-h-screen"><LoadingSpinner size="lg" /><p className="ml-4">Loading your dashboard...</p></div>;
+            }
+            return (
+              <div className={`min-h-screen bg-gradient-to-b from-[rgb(var(--color-bg-gradient-from-rgb))] to-[rgb(var(--color-bg-gradient-to-rgb))] flex flex-col items-center p-2 sm:p-4 font-sans selection:bg-[rgb(var(--color-accent-primary))] selection:text-[rgb(var(--color-text-on-accent-rgb))]`}>
+
+                {showCourseOutline && (
+                  <CourseOutlineModal isOpen={showCourseOutline} onClose={() => setShowCourseOutline(false)} learningPath={learningPath} currentLevelIndex={progress.currentLevelIndex} onNavigateToLevel={handleNavigateToLevel} persona={progress.userPersona!} theme={progress.theme} achievedBadgeIds={progress.achievedBadgeIds} totalPoints={progress.totalPoints}/>
+                )}
+
+                {showSettingsModal && (
+                  <SettingsModal
+                    isOpen={showSettingsModal}
+                    onClose={() => setShowSettingsModal(false)}
+                    onLogout={handleLogout}
+                    progress={progress}
+                    onUpdateProgress={updateProgress}
+                  />
+                )}
+
+                <Header
+                  onOpenCourseOutline={() => setShowCourseOutline(true)}
+                  onOpenSettings={() => setShowSettingsModal(true)}
+                  onGoHome={handleGoHome}
+                  persona={progress.userPersona}
+                  userName={authUser.name}
+                  totalPoints={progress.totalPoints}
+                  currentStepTitle="Dashboard"
+                />
+
+                <Dashboard
+                  progress={progress}
+                  learningPath={learningPath}
+                  onStartLearning={handleStartLearning}
+                  onOpenCourseOutline={() => setShowCourseOutline(true)}
+                />
+
+                <footer className="text-center mt-auto pt-6 sm:pt-8 text-xs text-[rgb(var(--color-text-secondary-rgb))] px-4">
+                  {authUser?.isAdmin && (
+                    <button onClick={() => setViewMode('admin')} className="hover:underline mb-2 block">
+                      Admin Dashboard
+                    </button>
+                  )}
+                  <p className="truncate">Logged in as {authUser?.email}</p>
+                </footer>
+              </div>
+            );
+        case 'learning':
             if (!progress || !currentStep || !authUser) {
                 return <div className="flex items-center justify-center min-h-screen"><LoadingSpinner size="lg" /><p className="ml-4">Loading your learning path...</p></div>;
             }
             return (
-              <div className={`min-h-screen bg-gradient-to-b from-[rgb(var(--color-bg-gradient-from-rgb))] to-[rgb(var(--color-bg-gradient-to-rgb))] flex flex-col items-center p-4 font-sans selection:bg-[rgb(var(--color-accent-primary))] selection:text-[rgb(var(--color-text-on-accent-rgb))]`}>
+              <div className={`min-h-screen bg-gradient-to-b from-[rgb(var(--color-bg-gradient-from-rgb))] to-[rgb(var(--color-bg-gradient-to-rgb))] flex flex-col items-center p-2 sm:p-4 font-sans selection:bg-[rgb(var(--color-accent-primary))] selection:text-[rgb(var(--color-text-on-accent-rgb))]`}>
                 
                 {showCourseOutline && (
                   <CourseOutlineModal isOpen={showCourseOutline} onClose={() => setShowCourseOutline(false)} learningPath={learningPath} currentLevelIndex={progress.currentLevelIndex} onNavigateToLevel={handleNavigateToLevel} persona={progress.userPersona!} theme={progress.theme} achievedBadgeIds={progress.achievedBadgeIds} totalPoints={progress.totalPoints}/>
@@ -237,15 +295,23 @@ const App: React.FC = () => {
                   />
                 )}
           
-                <Header onOpenCourseOutline={() => setShowCourseOutline(true)} onOpenSettings={() => setShowSettingsModal(true)} persona={progress.userPersona} userName={authUser.name} totalPoints={progress.totalPoints}/>
+                <Header
+                  onOpenCourseOutline={() => setShowCourseOutline(true)}
+                  onOpenSettings={() => setShowSettingsModal(true)}
+                  onGoHome={handleGoHome}
+                  persona={progress.userPersona}
+                  userName={authUser.name}
+                  totalPoints={progress.totalPoints}
+                  currentStepTitle={currentStep?.title}
+                />
           
-                <main className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  <div className="flex flex-col space-y-6">
+                <main className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
+                  <div className="flex flex-col space-y-4 sm:space-y-6">
                     <ConceptDisplay explanation={conceptExplanation} isLoading={isExplanationLoading} icon={<Icons.LightBulbIcon className="w-6 h-6" />} isWelcomeStep={currentStep.id.includes('welcome')} persona={progress.userPersona}/>
                     <CodeInput code={userCode} setCode={setUserCode} onSubmit={handleCodeSubmit} isLoading={isFeedbackLoading} placeholder={currentStep.placeholder} persona={progress.userPersona}/>
                   </div>
-          
-                  <div className="flex flex-col space-y-6">
+
+                  <div className="flex flex-col space-y-4 sm:space-y-6">
                      <div className="flex items-center text-lg font-semibold text-[rgb(var(--color-icon-thumbsup-rgb))]"><Icons.ThumbsUpIcon className="w-6 h-6 mr-2 flex-shrink-0" /><h3>Coach's Feedback</h3></div>
                     <FeedbackDisplay feedback={coachFeedback} isLoading={isFeedbackLoading} persona={progress.userPersona}/>
                      {error && ( <div className="bg-[rgba(var(--color-accent-warning-bg-rgb),0.2)] text-[rgb(var(--color-accent-warning-rgb))] border border-[rgb(var(--color-accent-warning-rgb))] p-3 rounded-md text-sm"><strong>Error:</strong> {error}</div> )}
@@ -254,18 +320,25 @@ const App: React.FC = () => {
           
                 <LevelNavigator onPrevious={handlePreviousLevel} onNext={handleNextLevel} canGoPrevious={progress.currentLevelIndex > 0} canGoNext={progress.currentLevelIndex < learningPath.length - 1} isNextDisabled={!isChallengeCompleted} persona={progress.userPersona}/>
           
-                <div className="fixed bottom-4 right-4 flex flex-col-reverse space-y-2 space-y-reverse z-50">
+                <div className="fixed bottom-4 right-2 sm:right-4 flex flex-col-reverse space-y-2 space-y-reverse z-50 max-w-[calc(100vw-1rem)] sm:max-w-sm">
                   {notifications.map(notif => {
                     const IconComponent = notif.iconName ? Icons[notif.iconName] : Icons.SparklesIcon;
                     return (
-                      <div key={notif.id} className="animate-fade-in-up bg-[rgb(var(--color-bg-tertiary-rgb))] text-[rgb(var(--color-text-primary-rgb))] py-2 px-4 rounded-lg shadow-lg flex items-center border border-[rgb(var(--color-border-primary-rgb))]"><IconComponent className="w-5 h-5 mr-2 text-[rgb(var(--color-accent-tertiary-rgb))]" />{notif.message}</div>
+                      <div key={notif.id} className="animate-fade-in-up bg-[rgb(var(--color-bg-tertiary-rgb))] text-[rgb(var(--color-text-primary-rgb))] py-2 px-3 sm:px-4 rounded-lg shadow-lg flex items-center border border-[rgb(var(--color-border-primary-rgb))] text-sm">
+                        <IconComponent className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-[rgb(var(--color-accent-tertiary-rgb))] flex-shrink-0" />
+                        <span className="truncate">{notif.message}</span>
+                      </div>
                     );
                   })}
                 </div>
           
-                <footer className="text-center mt-auto pt-8 text-xs text-[rgb(var(--color-text-secondary-rgb))]">
-                  {authUser?.isAdmin && ( <button onClick={() => setViewMode('admin')} className="hover:underline mb-2">Admin Dashboard</button> )}
-                  <p>Logged in as {authUser?.email}</p>
+                <footer className="text-center mt-auto pt-6 sm:pt-8 text-xs text-[rgb(var(--color-text-secondary-rgb))] px-4">
+                  {authUser?.isAdmin && (
+                    <button onClick={() => setViewMode('admin')} className="hover:underline mb-2 block">
+                      Admin Dashboard
+                    </button>
+                  )}
+                  <p className="truncate">Logged in as {authUser?.email}</p>
                 </footer>
               </div>
             );
