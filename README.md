@@ -90,7 +90,7 @@ The project is configured for Netlify deployment:
 1. Connect your repository to Netlify
 2. Set the build command to `npm run build`
 3. Set the publish directory to `dist`
-4. Add your `GEMINI_API_KEY` environment variable in Netlify settings
+4. Add your `GEMINI_API_KEY` environment variable in Netlify settings (required for AI features)
 5. Deploy!
 
 ## Project Structure
