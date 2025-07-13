@@ -123,16 +123,21 @@ const App: React.FC = () => {
   const handleOnboardingComplete = (
     persona: UserPersona,
     mode: CourseMode,
-    profession?: string
+    profession?: string,
+    analogyTheme?: string
   ) => {
     if (!authUser) return;
-    
+
     const newTheme: Theme = persona === 'kid' ? 'playful' : 'graceful';
+    // Default analogy theme based on persona if not selected
+    const defaultAnalogyTheme = persona === 'doctor' ? 'medical' : 'city';
+
     const initialProgress: GameProgress = {
         userPersona: persona,
         courseMode: mode,
         userProfession: profession || null,
         theme: newTheme,
+        analogyTheme: (analogyTheme as any) || defaultAnalogyTheme,
         currentLevelIndex: 0,
         totalPoints: 0,
         achievedBadgeIds: [],
@@ -223,7 +228,13 @@ const App: React.FC = () => {
                 )}
           
                 {showSettingsModal && (
-                  <SettingsModal isOpen={showSettingsModal} onClose={() => setShowSettingsModal(false)} onLogout={handleLogout}/>
+                  <SettingsModal
+                    isOpen={showSettingsModal}
+                    onClose={() => setShowSettingsModal(false)}
+                    onLogout={handleLogout}
+                    progress={progress}
+                    onUpdateProgress={updateProgress}
+                  />
                 )}
           
                 <Header onOpenCourseOutline={() => setShowCourseOutline(true)} onOpenSettings={() => setShowSettingsModal(true)} persona={progress.userPersona} userName={authUser.name} totalPoints={progress.totalPoints}/>

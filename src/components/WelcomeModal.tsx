@@ -1,19 +1,21 @@
 import React, { useState } from 'react';
 import { UserIcon, BriefcaseIcon, GoogleIcon } from './icons';
-import type { UserPersona, CourseMode, AuthUser } from '../types';
+import type { UserPersona, CourseMode, AuthUser, AnalogyTheme } from '../types';
 import { authService } from '../services/authService';
 import { LoadingSpinner } from './LoadingSpinner';
+import { ANALOGY_THEMES } from '../constants';
 
 interface WelcomeModalProps {
-  onOnboardingComplete: (persona: UserPersona, courseMode: CourseMode, profession?: string) => void;
+  onOnboardingComplete: (persona: UserPersona, courseMode: CourseMode, profession?: string, analogyTheme?: string) => void;
   authUser: AuthUser | null;
 }
 
 export const WelcomeModal: React.FC<WelcomeModalProps> = ({ onOnboardingComplete, authUser }) => {
-  const [step, setStep] = useState<'login' | 'persona' | 'course' | 'profession'>('login');
+  const [step, setStep] = useState<'login' | 'persona' | 'course' | 'profession' | 'analogy'>('login');
   const [selectedPersona, setSelectedPersona] = useState<UserPersona | null>(null);
   const [selectedCourse, setSelectedCourse] = useState<CourseMode | null>(null);
   const [profession, setProfession] = useState('');
+  const [selectedAnalogyTheme, setSelectedAnalogyTheme] = useState<AnalogyTheme | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async () => {
@@ -40,18 +42,23 @@ export const WelcomeModal: React.FC<WelcomeModalProps> = ({ onOnboardingComplete
 
   const handleCourseSelect = (course: CourseMode) => {
     setSelectedCourse(course);
-    handleComplete();
+    setStep('analogy');
   };
 
   const handleProfessionSubmit = () => {
     if (profession.trim()) {
-      handleComplete();
+      setStep('analogy');
     }
+  };
+
+  const handleAnalogySelect = (theme: AnalogyTheme) => {
+    setSelectedAnalogyTheme(theme);
+    handleComplete();
   };
 
   const handleComplete = () => {
     if (selectedPersona && selectedCourse) {
-      onOnboardingComplete(selectedPersona, selectedCourse, profession || undefined);
+      onOnboardingComplete(selectedPersona, selectedCourse, profession || undefined, selectedAnalogyTheme || undefined);
     }
   };
 
@@ -153,6 +160,48 @@ export const WelcomeModal: React.FC<WelcomeModalProps> = ({ onOnboardingComplete
           >
             Start Learning! 🚀
           </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (step === 'analogy') {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="bg-[rgb(var(--color-bg-primary-rgb))] rounded-lg p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <h2 className="text-2xl font-bold text-[rgb(var(--color-text-accent-rgb))] mb-4 text-center">Choose Your Learning Style</h2>
+          <p className="text-[rgb(var(--color-text-secondary-rgb))] text-center mb-6">
+            Pick the analogy theme that resonates with you. We'll use these examples to explain technical concepts.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {Object.entries(ANALOGY_THEMES).map(([key, theme]) => (
+              <button
+                key={key}
+                onClick={() => handleAnalogySelect(key as AnalogyTheme)}
+                className={`${commonButtonClass} bg-[rgb(var(--color-bg-secondary-rgb))] hover:bg-[rgb(var(--color-bg-tertiary-rgb))] text-[rgb(var(--color-text-primary-rgb))] border border-[rgb(var(--color-border-primary-rgb))] hover:border-[rgb(var(--color-accent-primary-rgb))] focus:ring-[rgb(var(--color-accent-primary-rgb))] text-left p-4`}
+              >
+                <div className="flex items-start space-x-3">
+                  <span className="text-2xl">{theme.emoji}</span>
+                  <div>
+                    <div className="font-semibold text-[rgb(var(--color-text-accent-rgb))] mb-1">
+                      {theme.name}
+                    </div>
+                    <div className="text-sm text-[rgb(var(--color-text-secondary-rgb))]">
+                      {theme.description}
+                    </div>
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+          <div className="mt-6 text-center">
+            <button
+              onClick={() => handleAnalogySelect('city')}
+              className="text-[rgb(var(--color-text-secondary-rgb))] hover:text-[rgb(var(--color-text-accent-rgb))] underline"
+            >
+              Skip - Use default analogies
+            </button>
+          </div>
         </div>
       </div>
     );

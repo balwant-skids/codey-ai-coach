@@ -1,15 +1,24 @@
 import type { UserPersona, CourseMode, GameProgress, LearningStep } from "../types";
-import { medicalAnalogyMap, sweAnalogyMap } from '../constants';
+import { ANALOGY_THEMES } from '../constants';
 
 const generateSystemInstruction = (
   baseInstructionType: 'explanation' | 'evaluation',
   persona: UserPersona,
   courseMode: CourseMode,
   blockType?: string,
-  profession?: string
+  profession?: string,
+  analogyTheme?: string
 ): string => {
-  
-  const analogyMap = persona === 'doctor' ? medicalAnalogyMap : sweAnalogyMap;
+
+  // Determine which analogy map to use
+  let analogyMap: Record<string, string>;
+  if (analogyTheme && ANALOGY_THEMES[analogyTheme as keyof typeof ANALOGY_THEMES]) {
+    analogyMap = ANALOGY_THEMES[analogyTheme as keyof typeof ANALOGY_THEMES].map;
+  } else {
+    // Default fallback based on persona
+    analogyMap = persona === 'doctor' ? ANALOGY_THEMES.medical.map : ANALOGY_THEMES.city.map;
+  }
+
   const conceptKey = blockType || '';
   const analogy = analogyMap[conceptKey] || 'a relevant real-world analogy';
 
@@ -87,12 +96,19 @@ const callGeminiBackend = async (prompt: string, systemInstruction: string): Pro
 
 export const explainConcept = async (
   progress: GameProgress,
-  conceptPrompt: string, 
+  conceptPrompt: string,
   blockType?: string,
 ): Promise<string> => {
   if (!progress.userPersona || !progress.courseMode) return "User profile not set up correctly.";
-  
-  const systemInstruction = generateSystemInstruction('explanation', progress.userPersona, progress.courseMode, blockType, progress.userProfession || undefined);
+
+  const systemInstruction = generateSystemInstruction(
+    'explanation',
+    progress.userPersona,
+    progress.courseMode,
+    blockType,
+    progress.userProfession || undefined,
+    progress.analogyTheme || undefined
+  );
   return callGeminiBackend(conceptPrompt, systemInstruction);
 };
 
@@ -103,9 +119,16 @@ export const evaluateCode = async (
 ): Promise<string> => {
   if (!progress.userPersona || !progress.courseMode) return "User profile not set up correctly.";
 
-  const systemInstruction = generateSystemInstruction('evaluation', progress.userPersona, progress.courseMode, currentStep.blockType, progress.userProfession || undefined);
-  
+  const systemInstruction = generateSystemInstruction(
+    'evaluation',
+    progress.userPersona,
+    progress.courseMode,
+    currentStep.blockType,
+    progress.userProfession || undefined,
+    progress.analogyTheme || undefined
+  );
+
   const fullPrompt = `${currentStep.codeEvaluationPromptPreamble} The user was given this challenge: '${currentStep.challengeDescription}'. They submitted the following: \`\`\`\n${userCode}\n\`\`\` Please review their submission based on your system instructions.`;
-  
+
   return callGeminiBackend(fullPrompt, systemInstruction);
 };

@@ -1,9 +1,9 @@
-import type { LearningStep, Badge } from './types';
+import type { LearningStep, Badge, AnalogyTheme } from './types';
 // import * as Icons from './components/icons'; // Used for badge iconName type safety
 
 // --- Analogy Maps ---
 
-// 1. For Healthcare Professionals
+// 1. Medical/Healthcare Analogies
 export const medicalAnalogyMap: Record<string, string> = {
   // OS and System Level
   'Operating System': 'The human nervous system - manages all basic functions and communication between components',
@@ -31,8 +31,8 @@ export const medicalAnalogyMap: Record<string, string> = {
   'Machine Learning': 'AI-assisted medical diagnosis - identifies patterns in data to predict outcomes',
 };
 
-// 2. For General Adult Beginners (Software Engineering Concepts)
-export const sweAnalogyMap: Record<string, string> = {
+// 2. City Planning/Government Analogies (Original SWE)
+export const cityAnalogyMap: Record<string, string> = {
   'Operating System': 'A city\'s government - manages all public services and resources',
   'Kernel': 'The mayor\'s office - handles the most critical city-wide decisions',
   'Process': 'A construction project - has a clear plan, resources, and a final goal',
@@ -52,6 +52,129 @@ export const sweAnalogyMap: Record<string, string> = {
 
   'Machine Learning': 'Teaching a new employee by showing them thousands of past examples of a task until they can do it on their own',
 };
+
+// 3. Business/Corporate Analogies
+export const businessAnalogyMap: Record<string, string> = {
+  'Operating System': 'Corporate headquarters - manages all departments and company operations',
+  'Kernel': 'The CEO - makes critical decisions and allocates company resources',
+  'Process': 'A business project - has defined goals, timeline, and deliverables',
+  'Thread': 'A specialized team (Marketing, Sales, HR) - works on specific tasks within projects',
+
+  'CPU': 'The executive team - processes decisions and drives company performance',
+  'RAM': 'Active project workspace - holds current initiatives and ongoing work',
+  'Hard Drive': 'Company archives - stores all historical data and documents',
+
+  'API': 'Business partnerships - standardized ways for companies to work together',
+  'Firewall': 'Corporate security - protects against competitors and threats',
+  'Database': 'Customer relationship management system - organizes and retrieves business data',
+
+  'Debugging': 'Business consulting - identifying and solving operational problems',
+  'Microservices': 'Franchise model - independent locations that operate under common standards',
+  'Machine Learning': 'Market research analysis - learning from customer data to predict trends',
+};
+
+// 4. Kitchen/Cooking Analogies
+export const kitchenAnalogyMap: Record<string, string> = {
+  'Operating System': 'The head chef - coordinates all kitchen operations and staff',
+  'Kernel': 'The kitchen manager - handles core operations and resource allocation',
+  'Process': 'A recipe - step-by-step instructions to create a dish',
+  'Thread': 'A line cook - specializes in specific cooking tasks (grill, sauté, prep)',
+
+  'CPU': 'The main stove - where all the cooking (processing) happens',
+  'RAM': 'The prep counter - holds ingredients currently being used',
+  'Hard Drive': 'The pantry - stores all ingredients and supplies long-term',
+
+  'API': 'The pass window - standardized way for kitchen and waitstaff to communicate orders',
+  'Firewall': 'Food safety protocols - protects against contamination and health risks',
+  'Database': 'Recipe collection - organized storage of all dishes and their ingredients',
+
+  'Debugging': 'Taste testing - identifying and fixing flavor problems in dishes',
+  'Microservices': 'Food truck network - independent kitchens serving different specialties',
+  'Machine Learning': 'Learning customer preferences - adjusting menu based on popular orders',
+};
+
+// 5. Sports/Team Analogies
+export const sportsAnalogyMap: Record<string, string> = {
+  'Operating System': 'The coaching staff - manages team strategy and player coordination',
+  'Kernel': 'The head coach - makes critical game decisions and manages resources',
+  'Process': 'A game plan - structured approach to achieve victory',
+  'Thread': 'Position players (quarterback, defender) - specialized roles within the game plan',
+
+  'CPU': 'The team captain - processes plays and drives team performance',
+  'RAM': 'The active playbook - current strategies and plays being used',
+  'Hard Drive': 'Team archives - all historical plays, stats, and game footage',
+
+  'API': 'Official signals - standardized communication between referees and teams',
+  'Firewall': 'Team defense - protects against opponent attacks and strategies',
+  'Database': 'Player statistics system - tracks and analyzes all player and team data',
+
+  'Debugging': 'Game film review - analyzing mistakes to improve performance',
+  'Microservices': 'League divisions - independent teams that follow common rules',
+  'Machine Learning': 'Scouting analysis - learning from opponent patterns to predict plays',
+};
+
+// 6. Nature/Ecosystem Analogies
+export const natureAnalogyMap: Record<string, string> = {
+  'Operating System': 'Forest ecosystem - manages all interactions between plants and animals',
+  'Kernel': 'The soil - provides foundation and nutrients for all life',
+  'Process': 'Seasonal cycle - natural progression with defined stages',
+  'Thread': 'Individual species (birds, insects) - each plays a specific role in the ecosystem',
+
+  'CPU': 'The sun - provides energy that powers all ecosystem processes',
+  'RAM': 'Active growing season - current energy and nutrients being used',
+  'Hard Drive': 'Seed bank in soil - stores genetic information for future growth',
+
+  'API': 'Pollination network - standardized way for plants and insects to exchange resources',
+  'Firewall': 'Natural immunity - protects ecosystem from diseases and invasive species',
+  'Database': 'Genetic diversity - organized storage of all species information',
+
+  'Debugging': 'Natural selection - identifying and eliminating weak or problematic traits',
+  'Microservices': 'Habitat patches - independent areas that support different communities',
+  'Machine Learning': 'Evolutionary adaptation - species learning from environment to survive better',
+};
+
+// Analogy Theme Configurations
+export const ANALOGY_THEMES: Record<AnalogyTheme, { name: string; description: string; emoji: string; map: Record<string, string> }> = {
+  medical: {
+    name: 'Medical & Healthcare',
+    description: 'Perfect for healthcare professionals - uses medical analogies like heart (CPU) and nervous system (API)',
+    emoji: '🏥',
+    map: medicalAnalogyMap
+  },
+  city: {
+    name: 'City Planning & Government',
+    description: 'Urban planning analogies - think mayor (kernel), city services (processes), and infrastructure',
+    emoji: '🏙️',
+    map: cityAnalogyMap
+  },
+  business: {
+    name: 'Business & Corporate',
+    description: 'Corporate world analogies - CEO (kernel), departments (threads), and business partnerships (APIs)',
+    emoji: '💼',
+    map: businessAnalogyMap
+  },
+  kitchen: {
+    name: 'Kitchen & Cooking',
+    description: 'Culinary analogies - head chef (OS), stove (CPU), prep counter (RAM), and recipes (processes)',
+    emoji: '👨‍🍳',
+    map: kitchenAnalogyMap
+  },
+  sports: {
+    name: 'Sports & Teams',
+    description: 'Athletic analogies - coaching staff (OS), team captain (CPU), and game plans (processes)',
+    emoji: '⚽',
+    map: sportsAnalogyMap
+  },
+  nature: {
+    name: 'Nature & Ecosystems',
+    description: 'Natural world analogies - forest ecosystem (OS), sun (CPU), and seasonal cycles (processes)',
+    emoji: '🌲',
+    map: natureAnalogyMap
+  }
+};
+
+// Legacy export for backward compatibility
+export const sweAnalogyMap = cityAnalogyMap;
 
 
 // --- Learning Paths ---
@@ -110,14 +233,27 @@ export const MEDTECH_LEARNING_PATH: LearningStep[] = [
     emoji: '🏥',
     blockType: 'Introduction to MedTech Concepts',
     introductionPrompt: `You are an expert in medical technology, welcoming a fellow medical professional to a course on core tech concepts.
-Your goal is to bridge the gap between medicine and technology, emphasizing why this knowledge is crucial in modern healthcare.
-1.  Acknowledge their background: Start by welcoming them and stating that their clinical expertise is the perfect foundation for understanding these concepts.
-2.  Introduce the "Why": Explain that technology is deeply integrated into medicine, from EHRs to diagnostic imaging. Understanding the principles behind these tools can enhance their use and improve communication with IT staff.
-3.  Explain the Analogy-Based Approach: State that this course uses medical analogies to make technical topics intuitive. For example, "We'll see how a computer's CPU is like the 'heart' of the system."
-4.  End with Encouragement: Reassure them that the goal is conceptual understanding, not becoming a coder. End with an encouraging message like, "Let's begin our first consultation."`,
-    challengeDescription: "To begin, what is one piece of technology you use in your daily practice that you'd like to understand better? (e.g., EHR, PACs, Telehealth platform).",
-    codeEvaluationPromptPreamble: "The user, a medical professional, has shared a piece of technology they use. Acknowledge their input warmly and express excitement for the journey. Say something like: 'Excellent. That's a perfect example of the systems we'll be demystifying. Let's pull up the first chart.'",
-    placeholder: "e.g., Our hospital's EHR system",
+
+**Structure your response in SHORT, DIGESTIBLE sections:**
+
+**🎯 Welcome & Recognition**
+- Acknowledge their clinical expertise as the perfect foundation
+- Recognize the complexity of modern healthcare technology
+
+**💡 Why This Matters**
+- Better communication with IT teams
+- Informed technology evaluation and adoption
+- Optimized digital workflows in patient care
+
+**📋 What to Expect**
+- Focus on core concepts, not coding
+- Medical analogies make technical topics intuitive
+- Practical applications to healthcare scenarios
+
+Keep each section to 2-3 sentences maximum. End with: "Let's begin our first consultation."`,
+    challengeDescription: "Clinical Scenario: You're evaluating a new telehealth platform for your practice. What specific technical aspects would you want to understand to make an informed decision? (Consider: data security, system integration, performance requirements)",
+    codeEvaluationPromptPreamble: "The user has identified key technical considerations for healthcare technology evaluation. Acknowledge their clinical thinking and connect it to the technical concepts we'll explore. Keep response brief and encouraging.",
+    placeholder: "e.g., How it integrates with our EHR, data encryption standards...",
     estimatedTimeMinutes: 5,
     points: 5,
   },
@@ -126,10 +262,26 @@ Your goal is to bridge the gap between medicine and technology, emphasizing why 
     title: 'System Anatomy',
     emoji: '🫀',
     blockType: 'CPU & RAM',
-    introductionPrompt: "Explain the concepts of 'CPU' and 'RAM' using their medical analogies from the map. Describe the CPU as the 'heart' and RAM as the 'short-term memory'. Contrast RAM with a Hard Drive ('long-term memory').",
-    challengeDescription: "Based on the analogies, if a hospital's computer is slow while actively looking up multiple patient records for a complex case, which component is the likely bottleneck: the 'heart' (CPU) or the 'short-term memory' (RAM)? Explain why.",
-    codeEvaluationPromptPreamble: "The user is diagnosing a slow system. The correct answer is RAM ('short-term memory') because it's responsible for holding active information. Evaluate their reasoning.",
-    placeholder: "The bottleneck is likely the... because...",
+    introductionPrompt: `Explain CPU and RAM using medical analogies. Structure your response in SHORT sections:
+
+**🫀 CPU - The Heart**
+- Processes all instructions and calculations
+- Like the heart pumping blood through the system
+- Determines overall system performance
+
+**🧠 RAM - Short-term Memory**
+- Holds currently active information
+- Like working memory during patient rounds
+- Contrast with Hard Drive (long-term medical records storage)
+
+**🏥 Clinical Application**
+- More RAM = handling more patient charts simultaneously
+- Faster CPU = quicker processing of complex imaging data
+
+Keep each section brief and focused.`,
+    challengeDescription: "Clinical Case: During a busy shift, Dr. Smith's workstation becomes sluggish when she has 15 patient charts open while reviewing lab results and imaging studies. Based on the system anatomy, which component is most likely the bottleneck? A) CPU (Heart) - processing power, or B) RAM (Short-term memory) - active data storage. Explain your diagnosis.",
+    codeEvaluationPromptPreamble: "The user is diagnosing a system performance issue. The correct answer is RAM (short-term memory) because it holds all the actively open patient data. Evaluate their clinical reasoning approach to the technical problem.",
+    placeholder: "The bottleneck is likely [A/B] because...",
     estimatedTimeMinutes: 10,
     points: 10,
   },
@@ -138,10 +290,85 @@ Your goal is to bridge the gap between medicine and technology, emphasizing why 
     title: 'System Communication',
     emoji: '🧠',
     blockType: 'API',
-    introductionPrompt: "Explain the concept of an 'API' using its analogy. Describe it as the 'nervous system for applications,' allowing different systems (like the EHR and the pharmacy's inventory system) to communicate.",
-    challengeDescription: "A doctor orders a prescription from the EHR. The system immediately confirms if the medication is in stock at the pharmacy. Describe the role of the 'API' in this interaction. What 'message' does the EHR send?",
-    codeEvaluationPromptPreamble: "The user is explaining the role of an API. They should describe a 'request' from the EHR (e.g., 'Do you have Medication X?') and a 'response' from the pharmacy system via the API (e.g., 'Yes, 50 units available').",
-    placeholder: "The EHR sends a request to...",
+    introductionPrompt: `Explain APIs using the nervous system analogy. Structure in SHORT sections:
+
+**🧠 API - The Nervous System**
+- Enables communication between different systems
+- Like neural pathways connecting brain to organs
+- Standardized "language" for system interaction
+
+**🏥 Healthcare Examples**
+- EHR ↔ Pharmacy systems
+- Lab systems ↔ Provider portals
+- Imaging systems ↔ Radiology workstations
+
+**⚡ How It Works**
+- System A sends a "request" (like a nerve signal)
+- System B processes and sends a "response"
+- Real-time data exchange without human intervention
+
+Keep explanations concise and practical.`,
+    challengeDescription: "Clinical Scenario: Dr. Johnson orders Metformin 500mg for a diabetic patient. Within seconds, the EHR displays: 'Pharmacy confirms: 30-day supply available, no drug interactions detected, insurance approved.' Trace this API communication: What specific 'requests' did the EHR send, and what 'responses' did it receive from which systems?",
+    codeEvaluationPromptPreamble: "The user should identify multiple API calls: EHR to pharmacy (medication availability), to drug interaction database (safety check), and to insurance system (coverage verification). Evaluate their understanding of multi-system API communication.",
+    placeholder: "The EHR sent requests to: 1) Pharmacy system asking... 2) Drug database checking... 3) Insurance system verifying...",
+    estimatedTimeMinutes: 15,
+    points: 15,
+  },
+  {
+    id: 'med_database',
+    title: 'Medical Records Architecture',
+    emoji: '📋',
+    blockType: 'Database',
+    introductionPrompt: `Explain databases using medical records analogy. Structure in SHORT sections:
+
+**📋 Database - Medical Records System**
+- Organized storage and retrieval of patient information
+- Like a digital filing cabinet with instant search
+- Structured data with relationships (patient → visits → diagnoses)
+
+**🔍 Key Features**
+- Query capability (find all diabetic patients)
+- Data integrity (no duplicate records)
+- Access controls (HIPAA compliance)
+
+**🏥 Clinical Applications**
+- Patient demographics and history
+- Lab results and trends
+- Medication lists and allergies
+
+Keep explanations focused on healthcare use cases.`,
+    challengeDescription: "Database Query Challenge: A quality improvement team needs to identify all patients with Type 2 Diabetes who had HbA1c > 8.0 in the last 6 months for a care management program. Describe how the database would process this request and what tables/relationships it would need to search.",
+    codeEvaluationPromptPreamble: "The user should identify key database concepts: querying patient table, joining with lab results, filtering by date ranges and values. Evaluate their understanding of relational data structure in healthcare context.",
+    placeholder: "The database would search: 1) Patient table for... 2) Lab results table for... 3) Join these tables where...",
+    estimatedTimeMinutes: 12,
+    points: 12,
+  },
+  {
+    id: 'med_security',
+    title: 'Healthcare Data Protection',
+    emoji: '🛡️',
+    blockType: 'Firewall',
+    introductionPrompt: `Explain cybersecurity using immune system analogy. Structure in SHORT sections:
+
+**🛡️ Firewall - Immune System**
+- First line of defense against cyber threats
+- Like white blood cells identifying and blocking pathogens
+- Monitors all incoming and outgoing data traffic
+
+**🏥 Healthcare Security Layers**
+- Network firewalls (perimeter defense)
+- Access controls (authentication/authorization)
+- Encryption (data protection in transit/rest)
+
+**⚠️ HIPAA Compliance**
+- Patient data requires special protection
+- Audit trails for all access
+- Breach notification requirements
+
+Focus on practical healthcare security implications.`,
+    challengeDescription: "Security Incident Response: A physician receives an email claiming to be from 'IT Support' asking for login credentials to 'update the EHR system.' The email looks legitimate but has subtle red flags. As a healthcare professional, what security principles should guide your response, and what systems protect against such threats?",
+    codeEvaluationPromptPreamble: "The user should identify phishing attempt, mention multi-factor authentication, firewall protection, and proper incident reporting procedures. Evaluate their understanding of healthcare cybersecurity best practices.",
+    placeholder: "This appears to be a phishing attempt because... The security measures that protect us include... I should respond by...",
     estimatedTimeMinutes: 10,
     points: 10,
   },

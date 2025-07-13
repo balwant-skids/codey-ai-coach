@@ -1,6 +1,7 @@
 export type UserPersona = 'kid' | 'adult' | 'doctor';
 export type Theme = 'playful' | 'graceful';
 export type CourseMode = 'coding' | 'swe'; // 'coding' for syntax, 'swe' for concepts
+export type AnalogyTheme = 'medical' | 'city' | 'business' | 'kitchen' | 'sports' | 'nature';
 
 // Represents a user authenticated via a third-party service
 export interface AuthUser {
@@ -35,9 +36,9 @@ export interface Badge {
 export interface GameProgress {
   // User profile info - set once
   userPersona: UserPersona | null;
-  courseMode: CourseMode | null; 
+  courseMode: CourseMode | null;
   userProfession: string | null; // e.g. "Cardiology" for doctors
-  
+
   // Dynamic progress
   currentLevelIndex: number;
   totalPoints: number;
@@ -46,6 +47,7 @@ export interface GameProgress {
 
   // User-configurable settings
   theme: Theme;
+  analogyTheme: AnalogyTheme | null; // User's preferred analogy style
 }
 
 // Data structure for the admin dashboard
