@@ -234,23 +234,22 @@ export const MEDTECH_LEARNING_PATH: LearningStep[] = [
     blockType: 'Introduction to MedTech Concepts',
     introductionPrompt: `You are an expert in medical technology, welcoming a fellow medical professional to a course on core tech concepts.
 
-**Structure your response in SHORT, DIGESTIBLE sections:**
+**CRITICAL: Structure your response EXACTLY like this with SHORT sections:**
 
 **🎯 Welcome & Recognition**
-- Acknowledge their clinical expertise as the perfect foundation
-- Recognize the complexity of modern healthcare technology
+Acknowledge their clinical expertise as the perfect foundation. Recognize the complexity of modern healthcare technology.
 
 **💡 Why This Matters**
-- Better communication with IT teams
-- Informed technology evaluation and adoption
-- Optimized digital workflows in patient care
+Better communication with IT teams. Informed technology evaluation and adoption. Optimized digital workflows in patient care.
 
 **📋 What to Expect**
-- Focus on core concepts, not coding
-- Medical analogies make technical topics intuitive
-- Practical applications to healthcare scenarios
+Focus on core concepts, not coding. Medical analogies make technical topics intuitive. Practical applications to healthcare scenarios.
 
-Keep each section to 2-3 sentences maximum. End with: "Let's begin our first consultation."`,
+**FORMATTING RULES:**
+- Each section: 2-3 sentences maximum
+- Use **bold headers** with emojis
+- NO long paragraphs
+- End with: "Let's begin our first consultation."`,
     challengeDescription: "Clinical Scenario: You're evaluating a new telehealth platform for your practice. What specific technical aspects would you want to understand to make an informed decision? (Consider: data security, system integration, performance requirements)",
     codeEvaluationPromptPreamble: "The user has identified key technical considerations for healthcare technology evaluation. Acknowledge their clinical thinking and connect it to the technical concepts we'll explore. Keep response brief and encouraging.",
     placeholder: "e.g., How it integrates with our EHR, data encryption standards...",
@@ -262,23 +261,24 @@ Keep each section to 2-3 sentences maximum. End with: "Let's begin our first con
     title: 'System Anatomy',
     emoji: '🫀',
     blockType: 'CPU & RAM',
-    introductionPrompt: `Explain CPU and RAM using medical analogies. Structure your response in SHORT sections:
+    introductionPrompt: `Explain CPU and RAM using medical analogies.
+
+**CRITICAL: Structure your response EXACTLY like this:**
 
 **🫀 CPU - The Heart**
-- Processes all instructions and calculations
-- Like the heart pumping blood through the system
-- Determines overall system performance
+Processes all instructions and calculations. Like the heart pumping blood through the system. Determines overall system performance.
 
 **🧠 RAM - Short-term Memory**
-- Holds currently active information
-- Like working memory during patient rounds
-- Contrast with Hard Drive (long-term medical records storage)
+Holds currently active information. Like working memory during patient rounds. Contrast with Hard Drive (long-term medical records storage).
 
 **🏥 Clinical Application**
-- More RAM = handling more patient charts simultaneously
-- Faster CPU = quicker processing of complex imaging data
+More RAM = handling more patient charts simultaneously. Faster CPU = quicker processing of complex imaging data.
 
-Keep each section brief and focused.`,
+**FORMATTING RULES:**
+- Each section: 2-3 sentences maximum
+- Use **bold headers** with emojis
+- NO long paragraphs
+- Keep explanations brief and focused`,
     challengeDescription: "Clinical Case: During a busy shift, Dr. Smith's workstation becomes sluggish when she has 15 patient charts open while reviewing lab results and imaging studies. Based on the system anatomy, which component is most likely the bottleneck? A) CPU (Heart) - processing power, or B) RAM (Short-term memory) - active data storage. Explain your diagnosis.",
     codeEvaluationPromptPreamble: "The user is diagnosing a system performance issue. The correct answer is RAM (short-term memory) because it holds all the actively open patient data. Evaluate their clinical reasoning approach to the technical problem.",
     placeholder: "The bottleneck is likely [A/B] because...",
@@ -290,24 +290,24 @@ Keep each section brief and focused.`,
     title: 'System Communication',
     emoji: '🧠',
     blockType: 'API',
-    introductionPrompt: `Explain APIs using the nervous system analogy. Structure in SHORT sections:
+    introductionPrompt: `Explain APIs using the nervous system analogy.
+
+**CRITICAL: Structure your response EXACTLY like this:**
 
 **🧠 API - The Nervous System**
-- Enables communication between different systems
-- Like neural pathways connecting brain to organs
-- Standardized "language" for system interaction
+Enables communication between different systems. Like neural pathways connecting brain to organs. Standardized "language" for system interaction.
 
 **🏥 Healthcare Examples**
-- EHR ↔ Pharmacy systems
-- Lab systems ↔ Provider portals
-- Imaging systems ↔ Radiology workstations
+EHR ↔ Pharmacy systems. Lab systems ↔ Provider portals. Imaging systems ↔ Radiology workstations.
 
 **⚡ How It Works**
-- System A sends a "request" (like a nerve signal)
-- System B processes and sends a "response"
-- Real-time data exchange without human intervention
+System A sends a "request" (like a nerve signal). System B processes and sends a "response". Real-time data exchange without human intervention.
 
-Keep explanations concise and practical.`,
+**FORMATTING RULES:**
+- Each section: 2-3 sentences maximum
+- Use **bold headers** with emojis
+- NO long paragraphs
+- Keep explanations concise and practical`,
     challengeDescription: "Clinical Scenario: Dr. Johnson orders Metformin 500mg for a diabetic patient. Within seconds, the EHR displays: 'Pharmacy confirms: 30-day supply available, no drug interactions detected, insurance approved.' Trace this API communication: What specific 'requests' did the EHR send, and what 'responses' did it receive from which systems?",
     codeEvaluationPromptPreamble: "The user should identify multiple API calls: EHR to pharmacy (medication availability), to drug interaction database (safety check), and to insurance system (coverage verification). Evaluate their understanding of multi-system API communication.",
     placeholder: "The EHR sent requests to: 1) Pharmacy system asking... 2) Drug database checking... 3) Insurance system verifying...",
@@ -382,10 +382,23 @@ export const SWE_LEARNING_PATH: LearningStep[] = [
     emoji: '🏗️',
     blockType: 'Intro to SWE Concepts',
     introductionPrompt: `You are a helpful and clear guide for an intelligent adult who is new to software concepts.
-1. Welcome them and explain that understanding software architecture is like understanding the blueprint of a building, even if you don't lay the bricks yourself.
-2. Explain this track focuses on the "what" and "why" of technology, not the "how" of coding syntax.
-3. State that you'll use real-world analogies (like city planning or running a business) to make concepts clear.
-4. End with an encouraging start: "Let's get started by looking at the foundational blueprint of any computer system."`,
+
+**CRITICAL: Structure your response EXACTLY like this:**
+
+**🏗️ Welcome to Software Architecture**
+Understanding software architecture is like understanding the blueprint of a building, even if you don't lay the bricks yourself.
+
+**🎯 What We'll Cover**
+This track focuses on the "what" and "why" of technology, not the "how" of coding syntax.
+
+**🌍 Learning Approach**
+We'll use real-world analogies (like city planning or running a business) to make concepts clear.
+
+**FORMATTING RULES:**
+- Each section: 2-3 sentences maximum
+- Use **bold headers** with emojis
+- NO long paragraphs
+- End with: "Let's get started by looking at the foundational blueprint of any computer system."`,
     challengeDescription: "To start, think about your favorite app or website. What do you think are the main 'parts' that make it work? (e.g., user login, showing pictures, etc.). There's no wrong answer!",
     codeEvaluationPromptPreamble: "The user has shared their thoughts on how an app works. Acknowledge their intuition and tell them it's a great starting point for thinking about architecture. Say something like 'That's a perfect way to start thinking about components. Now, let's look at the official blueprints.'",
     placeholder: "I think Instagram's main parts are...",
