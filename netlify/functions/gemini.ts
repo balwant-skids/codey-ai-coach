@@ -7,6 +7,7 @@ interface RequestBody {
 }
 
 const handler: Handler = async (event: HandlerEvent) => {
+  // Only allow POST requests
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: JSON.stringify({ error: 'Method Not Allowed' }) };
   }
