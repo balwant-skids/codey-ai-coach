@@ -1,11 +1,6 @@
 const { GoogleGenAI } = require("@google/genai");
 
-interface RequestBody {
-  prompt: string;
-  systemInstruction: string;
-}
-
-exports.handler = async (event: any) => {
+exports.handler = async (event) => {
   // Only allow POST requests
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: JSON.stringify({ error: 'Method Not Allowed' }) };
@@ -17,7 +12,7 @@ exports.handler = async (event: any) => {
   }
   
   try {
-    const { prompt, systemInstruction } = JSON.parse(event.body || '{}') as RequestBody;
+    const { prompt, systemInstruction } = JSON.parse(event.body || '{}');
     
     const ai = new GoogleGenAI({ apiKey });
     
