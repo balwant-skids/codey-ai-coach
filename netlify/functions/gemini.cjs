@@ -1,14 +1,27 @@
 const { GoogleGenAI } = require("@google/genai");
 
-exports.handler = async (event) => {
+exports.handler = async (event, context) => {
+  // Add CORS headers
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Content-Type': 'application/json'
+  };
+
+  // Handle preflight requests
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 200, headers, body: '' };
+  }
+
   // Only allow POST requests
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: JSON.stringify({ error: 'Method Not Allowed' }) };
+    return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method Not Allowed' }) };
   }
 
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
-    return { statusCode: 500, body: JSON.stringify({ error: 'API key not configured' }) };
+    return { statusCode: 500, headers, body: JSON.stringify({ error: 'API key not configured' }) };
   }
   
   try {
@@ -27,7 +40,7 @@ exports.handler = async (event) => {
 
     return {
       statusCode: 200,
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify({ text: geminiResponse.text }),
     };
     
@@ -36,6 +49,7 @@ exports.handler = async (event) => {
     const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
     return {
       statusCode: 500,
+      headers,
       body: JSON.stringify({ error: 'Failed to get response from Gemini.', details: errorMessage }),
     };
   }
