@@ -1,12 +1,11 @@
-import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
-import type { Handler, HandlerEvent } from "@netlify/functions";
+const { GoogleGenAI } = require("@google/genai");
 
 interface RequestBody {
   prompt: string;
   systemInstruction: string;
 }
 
-const handler: Handler = async (event: HandlerEvent) => {
+exports.handler = async (event: any) => {
   // Only allow POST requests
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: JSON.stringify({ error: 'Method Not Allowed' }) };
@@ -22,7 +21,7 @@ const handler: Handler = async (event: HandlerEvent) => {
     
     const ai = new GoogleGenAI({ apiKey });
     
-    const geminiResponse: GenerateContentResponse = await ai.models.generateContent({
+    const geminiResponse = await ai.models.generateContent({
         model: "gemini-2.5-flash",
         contents: prompt,
         config: {
@@ -47,4 +46,4 @@ const handler: Handler = async (event: HandlerEvent) => {
   }
 };
 
-export { handler };
+
