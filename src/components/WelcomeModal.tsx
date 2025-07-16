@@ -7,24 +7,36 @@ import { ANALOGY_THEMES } from '../constants';
 
 interface WelcomeModalProps {
   onOnboardingComplete: (persona: UserPersona, courseMode: CourseMode, profession?: string, analogyTheme?: string) => void;
-  authUser: AuthUser | null;
+  authUser?: AuthUser | null;
 }
 
-export const WelcomeModal: React.FC<WelcomeModalProps> = ({ onOnboardingComplete, authUser }) => {
+export const WelcomeModal: React.FC<WelcomeModalProps> = ({ onOnboardingComplete }) => {
   const [step, setStep] = useState<'login' | 'persona' | 'course' | 'profession' | 'analogy'>('login');
   const [selectedPersona, setSelectedPersona] = useState<UserPersona | null>(null);
   const [selectedCourse, setSelectedCourse] = useState<CourseMode | null>(null);
   const [profession, setProfession] = useState('');
   const [selectedAnalogyTheme, setSelectedAnalogyTheme] = useState<AnalogyTheme | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [loginError, setLoginError] = useState<string | null>(null);
 
   const handleLogin = async () => {
     setIsLoading(true);
+    setLoginError(null);
+
     try {
       await authService.signInWithGoogle();
       setStep('persona');
     } catch (error) {
       console.error('Login failed:', error);
+      
+      if (error instanceof Error) {
+        setLoginError(error.message);
+      } else {
+        setLoginError('An unknown error occurred during sign in.');
+      }
+
+      setStep('login');
+
     } finally {
       setIsLoading(false);
     }
@@ -64,21 +76,23 @@ export const WelcomeModal: React.FC<WelcomeModalProps> = ({ onOnboardingComplete
 
   const commonButtonClass = "w-full py-3 px-6 rounded-lg font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-opacity-75";
 
-  if (!authUser && step === 'login') {
+  if (step === 'login') {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
         <div className="bg-[rgb(var(--color-bg-primary-rgb))] rounded-lg p-8 max-w-md w-full text-center">
           <h2 className="text-2xl sm:text-3xl font-bold text-[rgb(var(--color-text-accent-rgb))] mb-4">Welcome to Your AI Coach!</h2>
-          <p className="text-[rgb(var(--color-text-tertiary-rgb))] mb-8">
+          <p className="text-[rgb(var(--color-text-tertiary-rgb))] text-sm mb-8">
             Begin your personalized learning journey by signing in.
           </p>
           <button onClick={handleLogin} disabled={isLoading} className={`${commonButtonClass} bg-white text-gray-700 hover:bg-gray-100 focus:ring-gray-400 flex items-center justify-center`}>
             {isLoading ? <LoadingSpinner size="sm" /> : <GoogleIcon className="w-6 h-6 mr-3" />}
             {isLoading ? 'Signing In...' : 'Sign in with Google'}
           </button>
-           <p className="text-xs text-[rgb(var(--color-text-secondary-rgb))] mt-4">
-            Click to sign in with your Google account.
-          </p>
+          {loginError && (
+            <p className="text-xs text-[rgb(var(--color-text-secondary-rgb))] mt-4 text-red-500">
+              {loginError}
+            </p>
+          )}
         </div>
       </div>
     );

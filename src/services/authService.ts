@@ -7,6 +7,7 @@ import {
 } from 'firebase/auth';
 import { auth } from '../firebaseConfig'; // Import the initialized auth instance
 import type { AuthUser } from '../types';
+import { dbService } from './dbService';
 
 // For demonstration, this email will be granted admin privileges
 const ADMIN_EMAIL = "admin@coacha.ai";
@@ -19,9 +20,32 @@ export const authService = {
    */
   signInWithGoogle: async (): Promise<FirebaseUser> => {
     const result = await signInWithPopup(auth, provider);
+
     if (!result.user) {
       throw new Error("Sign in failed, no user returned.");
     }
+
+    const isWhitelisted = await dbService.isUserWhitelisted(result.user.email || '');
+
+    if (!isWhitelisted) {
+      throw new Error("User is not whitelisted. Please contact support.");
+    }
+
+    // Create user in database after successful authentication
+    const appUser: AuthUser = {
+      uid: result.user.uid,
+      name: result.user.displayName || 'Anonymous',
+      email: result.user.email || '',
+      isLoggedIn: true,
+    };
+    
+    try {
+      await dbService.createUser(appUser);
+    } catch (error) {
+      console.error('Failed to create user in database:', error);
+      // Don't throw here - authentication was successful, just database creation failed
+    }
+
     return result.user;
   },
   
@@ -44,6 +68,7 @@ export const authService = {
           name: firebaseUser.displayName || 'Anonymous',
           email: firebaseUser.email || '',
           isAdmin: firebaseUser.email === ADMIN_EMAIL,
+          isLoggedIn: true,
         };
         callback(appUser);
       } else {

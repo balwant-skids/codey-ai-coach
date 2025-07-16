@@ -5,13 +5,68 @@ import {
   deleteDoc,
   collection,
   getDocs,
+  query,
+  where,
 } from 'firebase/firestore';
 import { db } from '../firebaseConfig'; // Import the initialized db instance
 import type { GameProgress, AdminAnalyticsData } from "../types";
+import type { AuthUser } from '../types'; // Added import for AuthUser
 
 const USERS_COLLECTION = 'users';
+const WHITELIST_COLLECTION = 'whitelist';
 
 export const dbService = {
+
+  /**
+   * Checks if a user is whitelisted (manually added).
+   * @param email - The user's email address
+   * @returns true if user is whitelisted, false otherwise
+   */
+  isUserWhitelisted: async (email: string): Promise<boolean> => {
+    if (!email) return false;
+    
+    const whitelistRef = collection(db, WHITELIST_COLLECTION);
+    const q = query(whitelistRef, where("email", "==", email.toLowerCase()));
+    const querySnapshot = await getDocs(q);
+    
+    return !querySnapshot.empty;
+  },
+  
+  /**
+   * Creates a new user record in the database.
+   * @param user - The authenticated user data
+   */
+  createUser: async (user: AuthUser): Promise<void> => {
+    const docRef = doc(db, USERS_COLLECTION, user.uid);
+    const docSnap = await getDoc(docRef);
+
+    // Only create if user doesn't already exist
+    if (!docSnap.exists()) {
+      const userData = {
+        uid: user.uid,
+        name: user.name,
+        email: user.email,
+        createdAt: new Date().toISOString(),
+        isLoggedIn: user.isLoggedIn,
+        updatedAt: new Date().toISOString(),
+        userPersona: null,
+        courseMode: null,
+        userProfession: null,
+        currentLevelIndex: 0,
+        totalPoints: 0,
+        achievedBadgeIds: [],
+        completedSteps: {},
+        theme: 'playful',
+        analogyTheme: null,
+      };
+      
+      await setDoc(docRef, userData);
+      console.log(`New user created: ${user.email}`);
+    } else {
+      console.log(`User already exists: ${user.email}`);
+    }
+  },
+
   /**
    * Fetches a user's progress from Firestore.
    * @param uid - The user's unique ID from Firebase Auth.

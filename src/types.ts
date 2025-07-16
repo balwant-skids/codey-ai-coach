@@ -8,6 +8,9 @@ export interface AuthUser {
   uid: string;
   name: string;
   email: string;
+  isLoggedIn: boolean;
+  createdAt?: string;
+  updatedAt?: string;
   isAdmin?: boolean;
 }
 

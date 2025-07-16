@@ -53,12 +53,33 @@ const App: React.FC = () => {
     setViewMode('loading');
     const unsubscribe = authService.onAuthStateChanged(async (user) => {
       if (user) {
-        setAuthUser(user);
-        const userProgress = await dbService.getUserProgress(user.uid);
-        if (userProgress) {
-          setProgress(userProgress);
-          setViewMode('dashboard');
-        } else {
+        // Check if user is whitelisted before proceeding
+        try {
+          const isWhitelisted = await dbService.isUserWhitelisted(user.email);
+          if (!isWhitelisted) {
+            // User is not whitelisted, sign them out and stay on welcome
+            await authService.signOut();
+            setAuthUser(null);
+            setProgress(null);
+            setViewMode('welcome');
+            return;
+          }
+          
+          // User is whitelisted, proceed normally
+          setAuthUser(user);
+          const userProgress = await dbService.getUserProgress(user.uid);
+          if (userProgress) {
+            setProgress(userProgress);
+            setViewMode('dashboard');
+          } else {
+            setProgress(null);
+            setViewMode('welcome');
+          }
+        } catch (error) {
+          console.error('Error checking whitelist:', error);
+          // If there's an error checking whitelist, sign out for safety
+          await authService.signOut();
+          setAuthUser(null);
           setProgress(null);
           setViewMode('welcome');
         }
